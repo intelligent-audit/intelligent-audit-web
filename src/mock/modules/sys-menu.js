@@ -379,49 +379,11 @@ var dataList = [
   }
 ]
 var navDataList = [
-  {
-    'menuId': 1,
-    'parentId': 0,
-    'parentName': null,
-    'name': '系统管理',
-    'url': null,
-    'perms': null,
-    'type': 0,
-    'icon': 'system',
-    'orderNum': 0,
-    'open': null,
-    'list': [
       {
         'menuId': 2,
-        'parentId': 1,
+        'parentId': 0,
         'parentName': null,
-        'name': '管理员列表',
-        'url': 'sys/user',
-        'perms': null,
-        'type': 1,
-        'icon': 'admin',
-        'orderNum': 1,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 3,
-        'parentId': 1,
-        'parentName': null,
-        'name': '角色管理',
-        'url': 'sys/role',
-        'perms': null,
-        'type': 1,
-        'icon': 'role',
-        'orderNum': 2,
-        'open': null,
-        'list': null
-      },
-      {
-        'menuId': 4,
-        'parentId': 1,
-        'parentName': null,
-        'name': '菜单管理',
+        'name': '过程审计',
         'url': 'sys/menu',
         'perms': null,
         'type': 1,
@@ -431,10 +393,10 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 5,
-        'parentId': 1,
+        'menuId': 3,
+        'parentId': 0,
         'parentName': null,
-        'name': 'SQL监控',
+        'name': '预警纠错',
         'url': 'http://localhost:8080/renren-fast/druid/sql.html',
         'perms': null,
         'type': 1,
@@ -444,10 +406,10 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 6,
-        'parentId': 1,
+        'menuId': 4,
+        'parentId': 0,
         'parentName': null,
-        'name': '定时任务',
+        'name': '模拟审计',
         'url': 'job/schedule',
         'perms': null,
         'type': 1,
@@ -457,10 +419,10 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 27,
-        'parentId': 1,
+        'menuId': 5,
+        'parentId': 0,
         'parentName': null,
-        'name': '参数管理',
+        'name': '辅助决策',
         'url': 'sys/config',
         'perms': 'sys:config:list,sys:config:info,sys:config:save,sys:config:update,sys:config:delete',
         'type': 1,
@@ -470,10 +432,10 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 30,
-        'parentId': 1,
+        'menuId': 6,
+        'parentId': 0,
         'parentName': null,
-        'name': '文件上传',
+        'name': '审计模型',
         'url': 'oss/oss',
         'perms': 'sys:oss:all',
         'type': 1,
@@ -483,10 +445,22 @@ var navDataList = [
         'list': null
       },
       {
-        'menuId': 29,
-        'parentId': 1,
+        'menuId': 7,
+        'parentId': 0,
         'parentName': null,
-        'name': '系统日志',
+        'name': '规章制度',
+        'url': 'sys/log',
+        'perms': 'sys:log:list',
+        'type': 1,
+        'icon': 'log',
+        'orderNum': 7,
+        'open': null,
+        'list': null
+      },{
+        'menuId': 8,
+        'parentId': 0,
+        'parentName': null,
+        'name': '用户中心',
         'url': 'sys/log',
         'perms': 'sys:log:list',
         'type': 1,
@@ -495,8 +469,6 @@ var navDataList = [
         'open': null,
         'list': null
       }
-    ]
-  }
 ]
 
 // 获取导航菜单列表 / 权限
@@ -514,7 +486,6 @@ export function nav () {
         'sys:menu:update',
         'sys:menu:delete',
         'sys:config:info',
-        'sys:menu:list',
         'sys:config:save',
         'sys:config:update',
         'sys:schedule:resume',

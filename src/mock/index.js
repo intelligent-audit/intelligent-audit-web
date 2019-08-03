@@ -16,7 +16,7 @@ fnCreate(jobSchedule, false)
 fnCreate(oss, false)
 fnCreate(sysConfig, false)
 fnCreate(sysLog, false)
-fnCreate(sysMenu, false)
+fnCreate(sysMenu, true)
 fnCreate(sysRole, false)
 fnCreate(sysUser, false)
 

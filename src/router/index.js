@@ -121,7 +121,7 @@ function fnAddDynamicMenuRoutes (menuList = [], routes = []) {
           menuId: menuList[i].menuId,
           title: menuList[i].name,
           isDynamic: true,
-          isTab: true,
+          isTab: false,
           iframeUrl: ''
         }
       }
