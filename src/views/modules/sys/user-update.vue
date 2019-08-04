@@ -1,8 +1,8 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '基本信息'"
+    title="编辑用户"
     :close-on-click-modal="false"
-    :visible.sync="visible">
+    :visible.sync="show">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
       <el-form-item label="姓名" prop="userName">
         <el-input v-model="dataForm.userName" placeholder="请输入登录平台的账号，推荐使用英文" :disabled="isDisabled"></el-input>
@@ -53,6 +53,23 @@
 <script>
   import { isEmail, isMobile } from '@/utils/validate'
   export default {
+    model: {
+        prop: 'updateId'
+    },
+    props: {
+      updateId: Number,
+      visible: Boolean,
+    },
+    computed: {
+        show: {
+            get() {
+                return this.visible
+            },
+            set(val) {
+                this.$emit('update:visible', val)
+            }
+        }
+    },
     data () {
       var validatePassword = (rule, value, callback) => {
         if (!this.dataForm.id && !/\S/.test(value)) {
@@ -85,7 +102,6 @@
         }
       }
       return {
-        visible: false,
         isDisabled: false,
         roleList: [
           {
@@ -139,73 +155,75 @@
       }
     },
     methods: {
-      init (id) {
-        this.dataForm.id = id
-        this.visible = true
-        if (this.dataForm.id) {
-            this.isDisabled = true
-            this.$http({
-              url: this.$http.adornUrl(`/sys/user/info/${this.dataForm.id}`),
-              method: 'get',
-              params: this.$http.adornParams()
-            }).then(({data}) => {
-              if (data && data.code === 0) {
-                this.dataForm.userName = data.user.username
-                this.dataForm.email = data.user.email
-                this.dataForm.mobile = data.user.mobile
-                this.dataForm.roleId = parseInt(data.user.roleId)
-                this.dataForm.status = data.user.status
-                this.dataForm.createTime = data.user.createTime
-                this.dataForm.createUser = data.user.createUser
-              }
-            })
-          }else{
-            this.isDisabled = false
-            this.dataForm.userName = ''
-            this.dataForm.email = ''
-            this.dataForm.mobile = ''
-            this.dataForm.roleId = 1
-            this.dataForm.status = 1
-            this.dataForm.createTime = ''
-            this.dataForm.createUser = ''
-          }
+      init () {
+        console.log("test",this.updateId)
+        // this.dataForm.id = id
+        // this.visible = true
+        // if (this.dataForm.id) {
+        //     this.isDisabled = true
+        //     this.$http({
+        //       url: this.$http.adornUrl(`/sys/user/info/${this.dataForm.id}`),
+        //       method: 'get',
+        //       params: this.$http.adornParams()
+        //     }).then(({data}) => {
+        //       if (data && data.code === 0) {
+        //         this.dataForm.userName = data.user.username
+        //         this.dataForm.email = data.user.email
+        //         this.dataForm.mobile = data.user.mobile
+        //         this.dataForm.roleId = parseInt(data.user.roleId)
+        //         this.dataForm.status = data.user.status
+        //         this.dataForm.createTime = data.user.createTime
+        //         this.dataForm.createUser = data.user.createUser
+        //       }
+        //     })
+        //   }else{
+        //     this.isDisabled = false
+        //     this.dataForm.userName = ''
+        //     this.dataForm.email = ''
+        //     this.dataForm.mobile = ''
+        //     this.dataForm.roleId = 1
+        //     this.dataForm.status = 1
+        //     this.dataForm.createTime = ''
+        //     this.dataForm.createUser = ''
+        //   }
       },
       // 表单提交
       dataFormSubmit () {
-        this.visible = false
-        this.$emit('refreshDataList',0)
-        // this.$refs['dataForm'].validate((valid) => {
-        //   if (valid) {
-        //     this.$http({
-        //       url: this.$http.adornUrl(`/sys/user/${!this.dataForm.id ? 'save' : 'update'}`),
-        //       method: 'post',
-        //       data: this.$http.adornData({
-        //         'userId': this.dataForm.id || undefined,
-        //         'username': this.dataForm.userName,
-        //         'password': this.dataForm.password,
-        //         'email': this.dataForm.email,
-        //         'mobile': this.dataForm.mobile,
-        //         'status': this.dataForm.status,
-        //         'roleIdList': this.dataForm.roleIdList
-        //       })
-        //     }).then(({data}) => {
-        //       if (data && data.code === 0) {
-        //         this.$message({
-        //           message: '操作成功',
-        //           type: 'success',
-        //           duration: 1500,
-        //           onClose: () => {
-        //             this.visible = false
-        //             this.$emit('refreshDataList(1)')
-        //           }
-        //         })
-        //       } else {
-        //         this.$message.error(data.msg)
-        //       }
-        //     })
-        //   }
-        // })
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            this.$http({
+              url: this.$http.adornUrl(`/sys/user/${!this.dataForm.id ? 'save' : 'update'}`),
+              method: 'post',
+              data: this.$http.adornData({
+                'userId': this.dataForm.id || undefined,
+                'username': this.dataForm.userName,
+                'password': this.dataForm.password,
+                'email': this.dataForm.email,
+                'mobile': this.dataForm.mobile,
+                'status': this.dataForm.status,
+                'roleIdList': this.dataForm.roleIdList
+              })
+            }).then(({data}) => {
+              if (data && data.code === 0) {
+                this.$message({
+                  message: '操作成功',
+                  type: 'success',
+                  duration: 1500,
+                  onClose: () => {
+                    this.visible = false
+                    this.$emit('refreshDataList')
+                  }
+                })
+              } else {
+                this.$message.error(data.msg)
+              }
+            })
+          }
+        })
       }
+    },
+    activated:function() {
+      this.init()
     }
   }
 </script>

@@ -82,12 +82,14 @@
       layout="total, sizes, prev, pager, next, jumper">
     </el-pagination>
     <!-- 弹窗, 新增 / 修改 -->
-    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="getDataList"></add-or-update>
+    <add-or-update v-if="addOrUpdateVisible" ref="addOrUpdate" @refreshDataList="isDetail($event)"></add-or-update>
+    <update :visible.sync="updateVisible" v-model="updateId" @refreshDataList="getDataList"></update>
   </div>
 </template>
 
 <script>
   import AddOrUpdate from './user-add-or-update'
+  import Update from './user-update'
   export default {
     data () {
       return {
@@ -99,11 +101,14 @@
         pageSize: 10,
         totalPage: 0,
         dataListLoading: false,
-        addOrUpdateVisible: false
+        addOrUpdateVisible: false,
+        updateVisible: false,
+        updateId: 1
       }
     },
     components: {
-      AddOrUpdate
+      AddOrUpdate,
+      Update
     },
     activated () {
       this.getDataList()
@@ -162,6 +167,14 @@
       currentChangeHandle (val) {
         this.pageIndex = val
         this.getDataList()
+      },
+      isDetail(param){
+        if(param != 0){
+          this.updateId = param        
+          this.updateVisible = true
+        }else{
+          this.getDataList()
+        }
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
