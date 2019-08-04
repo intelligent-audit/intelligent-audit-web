@@ -18,7 +18,7 @@ fnCreate(sysConfig, false)
 fnCreate(sysLog, false)
 fnCreate(sysMenu, true)
 fnCreate(sysRole, false)
-fnCreate(sysUser, false)
+fnCreate(sysUser, true)
 
 /**
  * 创建mock模拟数据

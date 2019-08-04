@@ -6,76 +6,72 @@
       </el-form-item>
       <el-form-item>
         <el-button @click="getDataList()">查询</el-button>
-        <el-button v-if="isAuth('sys:user:save')" type="primary" @click="addOrUpdateHandle()">新增</el-button>
-        <el-button v-if="isAuth('sys:user:delete')" type="danger" @click="deleteHandle()" :disabled="dataListSelections.length <= 0">批量删除</el-button>
+        <el-button type="danger" @click="">重置</el-button>
       </el-form-item>
     </el-form>
-    <el-table
+    <div>
+      <el-row class="row-bg">
+        <el-button size="small" @click="addOrUpdateHandle(0)" type="primary">创建用户</el-button>
+      </el-row>
+      <el-table
       :data="dataList"
       border
       v-loading="dataListLoading"
-      @selection-change="selectionChangeHandle"
       style="width: 100%;">
-      <el-table-column
-        type="selection"
-        header-align="center"
-        align="center"
-        width="50">
-      </el-table-column>
-      <el-table-column
-        prop="userId"
-        header-align="center"
-        align="center"
-        width="80"
-        label="ID">
-      </el-table-column>
-      <el-table-column
-        prop="username"
-        header-align="center"
-        align="center"
-        label="用户名">
-      </el-table-column>
-      <el-table-column
-        prop="email"
-        header-align="center"
-        align="center"
-        label="邮箱">
-      </el-table-column>
-      <el-table-column
-        prop="mobile"
-        header-align="center"
-        align="center"
-        label="手机号">
-      </el-table-column>
-      <el-table-column
-        prop="status"
-        header-align="center"
-        align="center"
-        label="状态">
-        <template slot-scope="scope">
-          <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
-          <el-tag v-else size="small">正常</el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-        prop="createTime"
-        header-align="center"
-        align="center"
-        width="180"
-        label="创建时间">
-      </el-table-column>
-      <el-table-column
-        fixed="right"
-        header-align="center"
-        align="center"
-        width="150"
-        label="操作">
-        <template slot-scope="scope">
-          <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">修改</el-button>
-          <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
+        <el-table-column
+          prop="username"
+          header-align="center"
+          align="center"
+          label="账号">
+        </el-table-column>
+        <el-table-column
+          prop="roleName"
+          header-align="center"
+          align="center"
+          :formatter="roleFormatter"
+          label="角色">
+        </el-table-column>
+        <el-table-column
+          prop="mobile"
+          header-align="center"
+          align="center"
+          label="联系方式">
+        </el-table-column>
+        <el-table-column
+          prop="email"
+          header-align="center"
+          align="center"
+          label="EMAIL">
+        </el-table-column>
+        <el-table-column
+          prop="createTime"
+          header-align="center"
+          align="center"
+          label="创建时间">
+        </el-table-column>
+        <el-table-column
+          prop="status"
+          header-align="center"
+          align="center"
+          label="状态">
+          <template slot-scope="scope">
+            <el-tag v-if="scope.row.status === 0" size="small" type="danger">禁用</el-tag>
+            <el-tag v-else size="small">正常</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          header-align="center"
+          align="center"
+          width="150"
+          label="操作">
+          <template slot-scope="scope">
+            <el-button v-if="isAuth('sys:user:update')" type="text" size="small" @click="addOrUpdateHandle(scope.row.userId)">详情</el-button>
+            <el-button v-if="isAuth('sys:user:delete')" type="text" size="small" @click="deleteHandle(scope.row.userId)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
     <el-pagination
       @size-change="sizeChangeHandle"
       @current-change="currentChangeHandle"
@@ -103,7 +99,6 @@
         pageSize: 10,
         totalPage: 0,
         dataListLoading: false,
-        dataListSelections: [],
         addOrUpdateVisible: false
       }
     },
@@ -114,6 +109,27 @@
       this.getDataList()
     },
     methods: {
+      roleFormatter(row, col, val){
+        switch(row.roleId) {
+           case "1":
+              return "审计人员"
+              break;
+           case "2":
+              return "系统管理员"
+              break;
+           case "3":
+              return "第三方审计人员"
+              break;
+           case "4":
+              return "EIM业务人员"
+              break;
+           case "5":
+              return "领导"
+              break;
+           default:
+              return "超级管理员"
+          } 
+      },
       // 获取数据列表
       getDataList () {
         this.dataListLoading = true
@@ -146,10 +162,6 @@
       currentChangeHandle (val) {
         this.pageIndex = val
         this.getDataList()
-      },
-      // 多选
-      selectionChangeHandle (val) {
-        this.dataListSelections = val
       },
       // 新增 / 修改
       addOrUpdateHandle (id) {
@@ -191,3 +203,9 @@
     }
   }
 </script>
+<style>
+  .row-bg {
+    margin-bottom: 20px;
+    text-align: left;
+  }
+</style>

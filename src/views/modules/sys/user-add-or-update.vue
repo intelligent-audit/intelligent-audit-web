@@ -1,39 +1,51 @@
 <template>
   <el-dialog
-    :title="!dataForm.id ? '新增' : '修改'"
+    :title="!dataForm.id ? '新增' : '基本信息'"
     :close-on-click-modal="false"
     :visible.sync="visible">
     <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="dataFormSubmit()" label-width="80px">
-      <el-form-item label="用户名" prop="userName">
-        <el-input v-model="dataForm.userName" placeholder="登录帐号"></el-input>
+      <el-form-item label="姓名" prop="userName">
+        <el-input v-model="dataForm.userName" placeholder="请输入登录平台的账号，推荐使用英文" :disabled="isDisabled"></el-input>
       </el-form-item>
-      <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.password" type="password" placeholder="密码"></el-input>
+      <el-form-item label="密码" prop="password" :class="{ 'is-required': !dataForm.id }" v-if="!dataForm.id">
+        <el-input v-model="dataForm.password" type="password" placeholder="请设置登录密码"></el-input>
       </el-form-item>
-      <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }">
-        <el-input v-model="dataForm.comfirmPassword" type="password" placeholder="确认密码"></el-input>
+      <el-form-item label="确认密码" prop="comfirmPassword" :class="{ 'is-required': !dataForm.id }" v-if="!dataForm.id">
+        <el-input v-model="dataForm.comfirmPassword" type="password" placeholder="请再次输入你的密码"></el-input>
       </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="dataForm.email" placeholder="邮箱"></el-input>
+      <el-form-item label="角色" prop="roleId">
+        <el-select v-model="dataForm.roleId" style="width:100%;" :disabled="isDisabled">
+          <el-option v-for="role in roleList" :key="role.roleId" :label="role.roleName" :value="role.roleId"></el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="手机号" prop="mobile">
-        <el-input v-model="dataForm.mobile" placeholder="手机号"></el-input>
+      <el-form-item label="联系方式" prop="mobile">
+        <el-input v-model="dataForm.mobile" placeholder="请输入联系方式" :disabled="isDisabled"></el-input>
       </el-form-item>
-      <el-form-item label="角色" size="mini" prop="roleIdList">
-        <el-checkbox-group v-model="dataForm.roleIdList">
-          <el-checkbox v-for="role in roleList" :key="role.roleId" :label="role.roleId">{{ role.roleName }}</el-checkbox>
-        </el-checkbox-group>
+      <el-form-item label="EMAIL" prop="email">
+        <el-input v-model="dataForm.email" placeholder="请输入email" :disabled="isDisabled"></el-input>
       </el-form-item>
+      <el-form-item label="创建时间" prop="" v-if="dataForm.id">
+        <el-input v-model="dataForm.createTime" placeholder="" :disabled="isDisabled"></el-input>
+      </el-form-item>
+      <el-form-item label="录入者" prop="" v-if="dataForm.id">
+        <el-input v-model="dataForm.createUser" placeholder="" :disabled="isDisabled"></el-input>
+      </el-form-item>
+      <!-- 
       <el-form-item label="状态" size="mini" prop="status">
         <el-radio-group v-model="dataForm.status">
           <el-radio :label="0">禁用</el-radio>
           <el-radio :label="1">正常</el-radio>
         </el-radio-group>
-      </el-form-item>
+      </el-form-item> -->
     </el-form>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="visible = false">取消</el-button>
-      <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      <div v-if="!dataForm.id">
+        <el-button @click="visible = false">取消</el-button>
+        <el-button type="primary" @click="dataFormSubmit()">确定</el-button>
+      </div>
+      <div v-else>
+        <el-button type="primary" @click="dataFormSubmit()">编辑</el-button>
+      </div>
     </span>
   </el-dialog>
 </template>
@@ -74,16 +86,35 @@
       }
       return {
         visible: false,
-        roleList: [],
+        isDisabled: false,
+        roleList: [
+          {
+            roleId: 1,
+            roleName: "审计人员"
+          },{
+            roleId: 2,
+            roleName: "系统管理员"
+          },{
+            roleId: 3,
+            roleName: "第三方审计人员"
+          },{
+            roleId: 4,
+            roleName: "EIM业务人员"
+          },{
+            roleId: 5,
+            roleName: "领导"
+          }
+        ],
         dataForm: {
           id: 0,
           userName: '',
           password: '',
           comfirmPassword: '',
-          salt: '',
           email: '',
           mobile: '',
-          roleIdList: [],
+          roleId: 1,
+          createTime: '',
+          createUser: '',
           status: 1
         },
         dataRule: {
@@ -109,20 +140,10 @@
     },
     methods: {
       init (id) {
-        this.dataForm.id = id || 0
-        this.$http({
-          url: this.$http.adornUrl('/sys/role/select'),
-          method: 'get',
-          params: this.$http.adornParams()
-        }).then(({data}) => {
-          this.roleList = data && data.code === 0 ? data.list : []
-        }).then(() => {
-          this.visible = true
-          this.$nextTick(() => {
-            this.$refs['dataForm'].resetFields()
-          })
-        }).then(() => {
-          if (this.dataForm.id) {
+        this.dataForm.id = id
+        this.visible = true
+        if (this.dataForm.id) {
+            this.isDisabled = true
             this.$http({
               url: this.$http.adornUrl(`/sys/user/info/${this.dataForm.id}`),
               method: 'get',
@@ -130,15 +151,24 @@
             }).then(({data}) => {
               if (data && data.code === 0) {
                 this.dataForm.userName = data.user.username
-                this.dataForm.salt = data.user.salt
                 this.dataForm.email = data.user.email
                 this.dataForm.mobile = data.user.mobile
-                this.dataForm.roleIdList = data.user.roleIdList
+                this.dataForm.roleId = parseInt(data.user.roleId)
                 this.dataForm.status = data.user.status
+                this.dataForm.createTime = data.user.createTime
+                this.dataForm.createUser = data.user.createUser
               }
             })
+          }else{
+            this.isDisabled = false
+            this.dataForm.userName = ''
+            this.dataForm.email = ''
+            this.dataForm.mobile = ''
+            this.dataForm.roleId = 1
+            this.dataForm.status = 1
+            this.dataForm.createTime = ''
+            this.dataForm.createUser = ''
           }
-        })
       },
       // 表单提交
       dataFormSubmit () {
@@ -151,7 +181,6 @@
                 'userId': this.dataForm.id || undefined,
                 'username': this.dataForm.userName,
                 'password': this.dataForm.password,
-                'salt': this.dataForm.salt,
                 'email': this.dataForm.email,
                 'mobile': this.dataForm.mobile,
                 'status': this.dataForm.status,

@@ -461,7 +461,7 @@ var navDataList = [
         'parentId': 0,
         'parentName': null,
         'name': '用户中心',
-        'url': 'sys/log',
+        'url': 'sys/user',
         'perms': 'sys:log:list',
         'type': 1,
         'icon': 'log',
