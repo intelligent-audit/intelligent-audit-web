@@ -137,12 +137,13 @@ img {
         &:focus,
         &:hover {
           color: #fff;
-          background-color: mix(#000, $navbar--background-color, 15%);
+          background-color: mix(#000, $navbar--background-color, 100%);
+          background-color: #f1f4f5;
         }
       }
       > .el-menu-item.is-active,
       > .el-submenu.is-active > .el-submenu__title {
-        border-bottom-color: mix(#fff, $navbar--background-color, 85%);
+        border-bottom-color: mix(#f1f4f5, $navbar--background-color, 100%);
       }
       .el-menu-item i,
       .el-submenu__title i,
@@ -265,10 +266,13 @@ img {
       .el-menu-item,
       .el-submenu > .el-submenu__title {
         color: $sidebar--color-text-dark;
-        &:focus,
+        &:focus{
+          color: mix(#fff, #FFF, 30%);
+          background-color: mix(#000, $sidebar--color-text-dark, 2.5%);
+        }
         &:hover {
-          color: mix(#fff, $sidebar--color-text-dark, 50%);
-          background-color: mix(#fff, $sidebar--background-color-dark, 2.5%);
+          color: mix(#fff, $sidebar--background-color-dark, 30%);
+          background-color: mix(#000, $sidebar--color-text-dark, 2.5%);
         }
       }
       .el-menu,
@@ -277,7 +281,7 @@ img {
       }
       .el-menu-item.is-active,
       .el-submenu.is-active > .el-submenu__title {
-        color: mix(#fff, $sidebar--color-text-dark, 80%);
+        color: mix(#fff, $sidebar--background-color-dark, 10%);
       }
     }
   }

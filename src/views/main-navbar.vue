@@ -7,6 +7,7 @@
       </h1>
     </div>
     <div class="site-navbar__body clearfix">
+      <breadcrumb></breadcrumb>
       <!-- <el-menu
         class="site-navbar__menu"
         mode="horizontal">
@@ -44,6 +45,7 @@
 
 <script>
   import UpdatePassword from './main-navbar-update-password'
+  import Breadcrumb from '../components/Breadcrumb/index.vue'
   import { clearLoginInfo } from '@/utils'
   export default {
     data () {
@@ -52,7 +54,8 @@
       }
     },
     components: {
-      UpdatePassword
+      UpdatePassword,
+      Breadcrumb
     },
     computed: {
       navbarLayoutType: {

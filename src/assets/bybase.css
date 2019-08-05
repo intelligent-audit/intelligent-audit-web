@@ -1,0 +1,18 @@
+.el-menu-item{
+  margin-left: 20px;
+  padding-left: 0;
+  border-bottom-left-radius:28px ;
+  border-top-left-radius:28px ;
+}
+.el-menu-item.is-active {
+  margin-left: 20px;
+  padding-left: 0;
+  border-bottom-left-radius:28px ;
+  border-top-left-radius:28px ;
+  background-color: #f1f4f5;
+  color: #074a43;
+}
+.el-menu-item:hover{
+  background-color: #000;
+  color: #074a43;
+}

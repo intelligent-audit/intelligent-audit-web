@@ -27,7 +27,7 @@ const mainRoutes = {
   component: _import('main'),
   name: 'main',
   redirect: { name: 'home' },
-  meta: { title: '主入口整体布局' },
+  meta: { title: '工作台' },
   children: [
     // 通过meta对象设置路由展示方式
     // 1. isTab: 是否通过tab展示内容, true: 是, false: 否
